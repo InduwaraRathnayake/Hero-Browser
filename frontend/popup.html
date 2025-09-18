@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Explain with Gemini</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 16px;
+        width: 300px;
+        background: #ffffff;
+        color: #1f2937; /* neutral dark gray */
+      }
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #111827;
+      }
+      .card {
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        margin-bottom: 12px;
+      }
+      #result {
+        font-size: 14px;
+        line-height: 1.5;
+        color: #374151;
+        white-space: pre-wrap;
+      }
+      .empty {
+        color: #9ca3af;
+        font-style: italic;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+      button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      button:hover {
+        background: #1d4ed8;
+      }
+      #toggleButton {
+        width: 100%;
+        margin-top: 12px;
+        background: #ef4444;
+      }
+      #toggleButton.enabled {
+        background: #10b981;
+      }
+      #toggleButton:hover {
+        opacity: 0.9;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Gemini Assistant</h3>
+    <div class="card">
+      <div id="result" class="empty">Select text → Right click → Explain</div>
+    </div>
+    <div class="card">
+      <input
+        type="text"
+        id="question"
+        placeholder="Ask a question about the selected text"
+      />
+      <button id="askButton">Ask</button>
+    </div>
+    <button id="toggleButton">Enable Floating UI</button>
+    <script src="popup.js"></script>
+  </body>
+</html>
