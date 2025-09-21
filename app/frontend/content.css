@@ -1,0 +1,147 @@
+.gemini-floating-button {
+  position: absolute;
+  z-index: 10000;
+  width: 40px;
+  height: 40px;
+  background-color: #0a1128;
+  border: 2px solid #00b4d8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0, 180, 216, 0.5);
+  transition: all 0.2s ease;
+  color: #00b4d8;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
+}
+
+.gemini-floating-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 180, 216, 0.7);
+}
+
+#gemini-popup {
+  position: absolute;
+  z-index: 10001;
+  width: 300px;
+  background: #0a1128;
+  border: 1px solid #00b4d8;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 180, 216, 0.5);
+  padding: 16px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #e0e0e0;
+  animation: popup-glow 2s infinite alternate;
+}
+
+@keyframes popup-glow {
+  from { box-shadow: 0 0 20px rgba(0, 180, 216, 0.5); }
+  to { box-shadow: 0 0 30px rgba(0, 180, 216, 0.8); }
+}
+
+.gemini-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #00b4d8;
+  padding-bottom: 8px;
+  cursor: move; /* Indicate the header can be used for dragging */
+}
+
+.gemini-popup-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #00b4d8;
+  font-weight: 600;
+}
+
+.gemini-popup-close {
+  cursor: pointer;
+  color: #00b4d8;
+  font-size: 18px;
+}
+
+.gemini-popup-close:hover {
+  color: #90e0ef;
+}
+
+.gemini-popup-content {
+  margin-bottom: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+#result-area {
+  background: #182040;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: #e0e0e0;
+  border-left: 2px solid #00b4d8;
+}
+
+.gemini-popup-input {
+  display: flex;
+  gap: 8px;
+}
+
+#question-input {
+  flex: 1;
+  padding: 8px 12px;
+  background: #182040;
+  border: 1px solid #00b4d8;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #e0e0e0;
+}
+
+#question-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 180, 216, 0.3);
+}
+
+#ask-button {
+  background: #00b4d8;
+  color: #0a1128;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+#ask-button:hover {
+  background: #90e0ef;
+}
+
+.gemini-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(0, 180, 216, 0.1);
+  border-radius: 50%;
+  border-top-color: #00b4d8;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px rgba(0, 180, 216, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(0, 180, 216, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(0, 180, 216, 0.5); }
+}
+
+.cyber-glow {
+  animation: glow 2s infinite ease-in-out;
+}

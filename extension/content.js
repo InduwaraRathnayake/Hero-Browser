@@ -1,6 +1,5 @@
 console.log("Gemini Extension content script loaded");
 
-// Global state to track if the extension is enabled
 let extensionEnabled = true;
 let processingClick = false; // Flag to prevent event conflicts
 let dragOffset = { x: 0, y: 0 }; // For dragging functionality
@@ -41,19 +40,15 @@ function showPopup(x, y, selectedText) {
     console.error("No text selected");
     return;
   }
-  
-  // Remove any existing popup
+
   removePopup();
-  
-  // Create popup with cyber theme
+
   const popup = document.createElement('div');
   popup.id = 'gemini-popup';
   
-  // Position popup relative to the selection
   let popupX = x;
   let popupY = y + 10; // Place it near the selection
   
-  // Ensure it's visible in the viewport
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
   
@@ -172,7 +167,7 @@ function stopDraggingPopup(e) {
   }, 100);
 }
 
-// Ask a question about the selected text
+// Ask a question about the selected text - direct to Gemini API
 async function askQuestion(selectedText) {
   const input = document.getElementById('question-input');
   const question = input.value.trim();
@@ -183,38 +178,84 @@ async function askQuestion(selectedText) {
     return;
   }
   
-  console.log("Asking question:", question);
+  // Clear the input field after asking
+  const questionText = question;
+  input.value = '';
+  
+  console.log("Asking question:", questionText);
   console.log("About text:", selectedText.substring(0, 50) + "...");
   
   // Show loading state
   resultArea.innerHTML = '<div style="text-align: center;"><div class="gemini-spinner"></div></div>';
   
-  try {
-    const response = await fetch('http://127.0.0.1:8000/explain', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        text: `Question: ${question}\n\nContext: ${selectedText}` 
-      })
-    });
+  // Get API key and model from storage
+  chrome.storage.local.get(["geminiApiKey", "geminiModel"], async (data) => {
+    const apiKey = data.geminiApiKey;
+    const model = data.geminiModel || "gemini-2.5-flash-lite";
     
-    const result = await response.json();
-    console.log("Received response:", result);
+    if (!apiKey) {
+      resultArea.textContent = "Error: API key not set. Please set your API key in the extension popup.";
+      return;
+    }
     
-    if (result.error) {
-      resultArea.textContent = 'Error: ' + result.explanation;
-    } else {
-      resultArea.textContent = result.explanation;
+    const prompt = `
+      Question: ${questionText}
+      
+      Context: ${selectedText}
+      
+      Based on the provided context, please answer the question concisely and accurately.
+      If the context doesn't contain enough information to answer the question,
+      please use your own knowledge to provide a helpful answer.
+      Only give text output. Do not give markdown or HTML.
+    `;
+    
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    
+    const payload = {
+      contents: [
+        {
+          parts: [
+            {
+              text: prompt
+            }
+          ]
+        }
+      ]
+    };
+    
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+      
+      const data = await response.json();
+      console.log("API response:", data);
+      
+      if (data.error) {
+        resultArea.textContent = `Error: ${data.error.message || "Unknown error"}`;
+        return;
+      }
+      
+      // Extract the explanation from the response
+      const explanation = data.candidates?.[0]?.content?.parts?.[0]?.text || "No explanation available";
+      
+      resultArea.textContent = explanation;
+      
       // Save to extension storage for later use
       chrome.storage.local.set({ 
-        lastExplanation: result.explanation,
+        lastExplanation: explanation,
         lastSelectedText: selectedText 
       });
+      
+    } catch (error) {
+      console.error("Error:", error);
+      resultArea.textContent = "Error connecting to Gemini API: " + error.message;
     }
-  } catch (error) {
-    console.error("Error:", error);
-    resultArea.textContent = 'Error connecting to server: ' + error.message;
-  }
+  });
 }
 
 // Handle text selection

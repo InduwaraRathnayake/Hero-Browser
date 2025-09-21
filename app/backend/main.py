@@ -6,12 +6,12 @@ from fastapi.middleware.cors import CORSMiddleware
 import json
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+
 load_dotenv()
 
 app = FastAPI()
 
-API_KEY = os.getenv("GEMINI_API_KEY")  # Now it will find the key from .env
+API_KEY = os.getenv("GEMINI_API_KEY") 
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,7 +26,6 @@ class ExplainRequest(BaseModel):
 
 @app.post("/explain")
 async def explain(request: ExplainRequest):
-    print("api key:", API_KEY)
     if not API_KEY:
         print("WARNING: GEMINI_API_KEY is not set")
         return {"explanation": "API key is not configured", "error": True}
@@ -36,13 +35,14 @@ async def explain(request: ExplainRequest):
     
     # Check if it's a question about a context
     if input_text.startswith("Question:") and "Context:" in input_text:
-        print("Processing as question with context")
+        # print("Processing as question with context")
         prompt = f"""
         {input_text}
         
         Based on the provided context, please answer the question concisely and accurately.
         If the context doesn't contain enough information to answer the question,
-        please indicate that clearly.
+        please use your own knowledge to provide a helpful answer.
+        Only give text output. Do not give markdown or HTML.
         """
     else:
         print("Processing as regular explanation")
@@ -53,7 +53,7 @@ async def explain(request: ExplainRequest):
         {input_text}
         """
     
-    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key={API_KEY}"
     
     payload = {
         "contents": [
@@ -61,7 +61,7 @@ async def explain(request: ExplainRequest):
         ]
     }
 
-    print("Payload:", payload)  # Debugging log
+    # print("Payload:", payload)  # Debugging log
 
     async with httpx.AsyncClient() as client:
         try:
