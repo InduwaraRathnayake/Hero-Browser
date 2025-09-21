@@ -206,7 +206,7 @@ async function askQuestion(selectedText) {
       Based on the provided context, please answer the question concisely and accurately.
       If the context doesn't contain enough information to answer the question,
       please use your own knowledge to provide a helpful answer.
-      Only give text output. Do not give markdown or HTML.
+      Only give text output. DO NOT!!! give Markdown or HTML format.
     `;
     
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
