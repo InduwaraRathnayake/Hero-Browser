@@ -1,6 +1,3 @@
-console.log("Gemini Extension content script loaded");
-
-// Global state to track if the extension is enabled
 let extensionEnabled = true;
 let processingClick = false; // Flag to prevent event conflicts
 let dragOffset = { x: 0, y: 0 }; // For dragging functionality
@@ -41,19 +38,16 @@ function showPopup(x, y, selectedText) {
     console.error("No text selected");
     return;
   }
-  
-  // Remove any existing popup
+
   removePopup();
-  
-  // Create popup with cyber theme
+
   const popup = document.createElement('div');
   popup.id = 'gemini-popup';
   
-  // Position popup relative to the selection
+
   let popupX = x;
   let popupY = y + 10; // Place it near the selection
   
-  // Ensure it's visible in the viewport
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
   
@@ -282,5 +276,3 @@ document.addEventListener('mousedown', (e) => {
     e.stopPropagation();
   }
 });
-
-console.log("Gemini Extension content script fully loaded and initialized");
